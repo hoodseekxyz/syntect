@@ -39,6 +39,7 @@ export function Shell({ children }: { children: ReactNode }) {
   const [ink, setInk] = useState(0);
   const [muted, setMute] = useState(false);
   const [sheet, setSheet] = useState<Sheet>("dark");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     applySheet(readSheet());
@@ -125,6 +126,26 @@ export function Shell({ children }: { children: ReactNode }) {
             </button>
           </div>
           {nav("nav-scroll mt-1 flex items-center gap-1 overflow-x-auto lg:hidden")}
+        </div>
+        <div className="border-t border-line bg-ink-2">
+          <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2">
+            <span className="shrink-0 rounded-full bg-phosphor px-2.5 py-1 text-[10px] tracking-wide text-ink">{t("ca")}</span>
+            <p className="min-w-0 flex-1 break-all text-sm text-paper">{LAUNCH.contract || t("caEmpty")}</p>
+            {LAUNCH.contract ? (
+              <button
+                type="button"
+                className="shrink-0 rounded-full border border-line px-3 py-2 text-xs text-paper"
+                onClick={() => {
+                  void navigator.clipboard.writeText(LAUNCH.contract).then(() => {
+                    setCopied(true);
+                    window.setTimeout(() => setCopied(false), 1200);
+                  });
+                }}
+              >
+                {copied ? t("copied") : t("copy")}
+              </button>
+            ) : null}
+          </div>
         </div>
         <p className="border-t border-line px-4 py-2 text-center text-xs text-muted">{t("banner")}</p>
       </header>
