@@ -41,5 +41,5 @@ The avatar is a beam and three dots. Lime, then magenta, gold, sage. It has no l
 None of these are a chart. None of them are a promise. The room is a darkroom. You paint, you close the top plate, you leave the trap alone, and if a gift is actually there, you take it once.
 
 syntect.xyz
-@syntectXYZ
+https://t.me/syntectXYZ
 The library, which this is not: github.com/trishume/syntect

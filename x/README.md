@@ -2,7 +2,7 @@
 
 Profile, six posts, and one article. English, because the account is. Pictures are different frames on purpose: square, 3:1, 5:2, 16:9, 3:2, 4:3, 3:4.
 
-Nothing here is the syntect library, Microsoft, or Pons. MSFT is the pair, not the stock. A gift is one claim, not yield.
+Nothing here is the syntect library, Microsoft, or Pons. MSFT is the pair, not the stock. A gift is one claim, not yield. The public channel is https://t.me/syntectXYZ.
 
 ## Upload order
 

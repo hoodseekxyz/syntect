@@ -11,4 +11,5 @@ export const LAUNCH = {
   press: "",
   site: "syntect.xyz",
   handle: "@syntectXYZ",
+  telegram: "https://t.me/syntectXYZ",
 } as const;

@@ -145,7 +145,7 @@ export function Shell({ children }: { children: ReactNode }) {
             <a className="text-paper hover:text-phosphor" href="https://ponsfamily.com/launchpad" target="_blank" rel="noreferrer">
               Pons
             </a>
-            <a className="text-paper hover:text-phosphor" href="https://x.com/syntectXYZ" target="_blank" rel="noreferrer">
+            <a className="text-paper hover:text-phosphor" href={LAUNCH.telegram} target="_blank" rel="noreferrer">
               {LAUNCH.handle}
             </a>
             <span>{LAUNCH.site}</span>

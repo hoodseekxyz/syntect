@@ -7,5 +7,5 @@ Syntax ink. MSFT is the pair, not the stock. Paint, dive, hunt. A gift is one cl
 ```
 
 Name field, if it is empty: `SYNTECT`
-Handle already claimed: `@syntectXYZ`
+Channel: https://t.me/syntectXYZ
 Site: `https://syntect.xyz`
