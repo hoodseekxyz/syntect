@@ -15,10 +15,31 @@ const LINKS: { to: "/" | "/bench" | "/dive" | "/hunt" | "/detect" | "/desk"; key
   { to: "/desk", key: "navDesk" },
 ];
 
+type Sheet = "dark" | "light";
+
+function readSheet(): Sheet {
+  if (typeof document === "undefined") return "dark";
+  const saved = localStorage.getItem("syntect.ink");
+  if (saved === "light" || saved === "dark") return saved;
+  return document.documentElement.dataset.ink === "light" ? "light" : "dark";
+}
+
+function applySheet(sheet: Sheet) {
+  document.documentElement.dataset.ink = sheet;
+  localStorage.setItem("syntect.ink", sheet);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", sheet === "light" ? "#f4efe4" : "#14120e");
+}
+
 export function Shell({ children }: { children: ReactNode }) {
   const { t, locale, setLocale } = useI18n();
   const [ink, setInk] = useState(0);
   const [muted, setMute] = useState(false);
+  const [sheet, setSheet] = useState<Sheet>("dark");
+
+  useEffect(() => {
+    applySheet(readSheet());
+    setSheet(readSheet());
+  }, []);
 
   useEffect(() => {
     const sync = () => setInk(loadSave().ink);
@@ -30,51 +51,76 @@ export function Shell({ children }: { children: ReactNode }) {
 
   const rank = rankOf(ink);
   const rankName = locale === "tr" ? rank.current.tr : rank.current.en;
+  const nav = (className: string) => (
+    <nav className={className}>
+      {LINKS.map((link) => (
+        <Link
+          key={link.to}
+          to={link.to}
+          activeOptions={{ exact: true }}
+          className="flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs text-muted hover:text-paper"
+          activeProps={{ className: "flex min-h-11 shrink-0 items-center rounded-full bg-ink-3 px-3 text-xs text-phosphor" }}
+        >
+          {t(link.key)}
+        </Link>
+      ))}
+    </nav>
+  );
 
   return (
     <div className="min-h-dvh bg-ink text-paper">
       <header className="sticky top-0 z-40 border-b border-line bg-ink/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <Link to="/" className="font-display text-2xl leading-none tracking-tight text-paper">
-            Syntect
-          </Link>
-          <nav className="nav-scroll flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
-            {LINKS.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                activeOptions={{ exact: true }}
-                className="flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs text-muted hover:text-paper"
-                activeProps={{ className: "flex min-h-11 shrink-0 items-center rounded-full bg-ink-3 px-3 text-xs text-phosphor" }}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
-          </nav>
-          <div className="hidden items-center gap-2 sm:flex">
-            <span className="text-xs text-muted">{rankName}</span>
-            <span className="tabular-nums text-xs text-phosphor">{ink}</span>
+        <div className="mx-auto max-w-6xl px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Link to="/" className="font-display text-2xl leading-none tracking-tight text-paper">
+              Syntect
+            </Link>
+            {nav("nav-scroll hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto lg:flex")}
+            <div className="ml-auto hidden items-center gap-2 lg:ml-0 lg:flex">
+              <span className="text-xs text-muted">{rankName}</span>
+              <span className="tabular-nums text-xs text-phosphor">{ink}</span>
+            </div>
+            <div role="group" aria-label={t("theme")} className="ml-auto flex shrink-0 rounded-full border border-line p-0.5 lg:ml-0">
+              {(["dark", "light"] as const).map((mode) => {
+                const on = sheet === mode;
+                return (
+                  <button
+                    key={mode}
+                    type="button"
+                    aria-pressed={on}
+                    className={`min-h-11 rounded-full px-3 text-xs ${on ? "bg-phosphor text-ink" : "text-muted"}`}
+                    onClick={() => {
+                      applySheet(mode);
+                      setSheet(mode);
+                    }}
+                  >
+                    {t(mode)}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              className="min-h-11 rounded-full border border-line px-3 text-xs text-muted"
+              onClick={() => setLocale(locale === "en" ? "tr" : "en")}
+            >
+              {locale === "en" ? "TR" : "EN"}
+            </button>
+            <button
+              type="button"
+              aria-pressed={!muted}
+              aria-label={muted ? t("unmute") : t("mute")}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line text-muted"
+              onClick={() => {
+                const next = !muted;
+                setMuted(next);
+                setMute(next);
+              }}
+            >
+              {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+            </button>
           </div>
-          <button
-            type="button"
-            className="min-h-11 rounded-full border border-line px-3 text-xs text-muted"
-            onClick={() => setLocale(locale === "en" ? "tr" : "en")}
-          >
-            {locale === "en" ? "TR" : "EN"}
-          </button>
-          <button
-            type="button"
-            aria-pressed={!muted}
-            aria-label={muted ? t("unmute") : t("mute")}
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-line text-muted"
-            onClick={() => {
-              const next = !muted;
-              setMuted(next);
-              setMute(next);
-            }}
-          >
-            {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
-          </button>
+          {nav("nav-scroll mt-1 flex items-center gap-1 overflow-x-auto lg:hidden")}
         </div>
         <p className="border-t border-line px-4 py-2 text-center text-xs text-muted">{t("banner")}</p>
       </header>

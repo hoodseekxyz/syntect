@@ -25,6 +25,7 @@
     -webkit-font-smoothing: antialiased;
     background: var(--color-ink);
     color: var(--color-paper);
+    color-scheme: dark;
   }
   body {
     font-family: var(--font-mono);
@@ -155,4 +156,44 @@
     animation: none;
     opacity: 1;
   }
+}
+
+html[data-ink="light"] {
+  color-scheme: light;
+  --color-ink: #f4efe4;
+  --color-ink-2: #ebe4d2;
+  --color-ink-3: #e0d5bf;
+  --color-paper: #1a1612;
+  --color-bone: #3a322a;
+  --color-muted: #655c50;
+  --color-line: #cfc3ad;
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+html[data-ink="light"] .text-phosphor,
+html[data-ink="light"] .hover\:text-phosphor:hover {
+  color: #3e5a00;
+}
+html[data-ink="light"] .text-keyword {
+  color: #b01258;
+}
+html[data-ink="light"] .text-string {
+  color: #8a5800;
+}
+html[data-ink="light"] .text-comment {
+  color: #2d6434;
+}
+html[data-ink="light"] .text-fn {
+  color: #0f5f9e;
+}
+html[data-ink="light"] .text-num {
+  color: #b84312;
+}
+html[data-ink="light"] :is(.bg-phosphor, .bg-keyword, .bg-string, .bg-comment).text-ink {
+  color: #14120e;
+}
+html[data-ink="light"] ::selection {
+  background: #1a1612;
+  color: #f4efe4;
 }

@@ -40,6 +40,12 @@ export const Route = createRootRoute({
     <html lang="en" className="antialiased" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{var t=localStorage.getItem("syntect.ink");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.ink=t;var m=document.querySelector(\'meta[name="theme-color"]\');if(m)m.setAttribute("content",t==="light"?"#f4efe4":"#14120e")}catch(e){}',
+          }}
+        />
       </head>
       <body>
         <PreviewHostBridge />
