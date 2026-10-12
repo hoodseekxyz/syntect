@@ -7,7 +7,7 @@ export const LAUNCH = {
   buyback: false,
   holders: false,
   feeWallet: "press",
-  contract: "",
+  contract: "0xafdd0ada713d53c2d9e31ec7fcdfbf95a1eaa85a",
   press: "",
   site: "syntect.xyz",
   handle: "@syntectXYZ",
