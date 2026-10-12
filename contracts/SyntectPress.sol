@@ -12,7 +12,7 @@ pragma solidity 0.8.28;
 ///         the bond and holds it for the owner.
 ///
 ///         claimGift() pays giftWei of ETH to a wallet that holds the token,
-///         once per window, and only while the pot can cover it. It is not
+///         once per 15 minutes, and only while the pot can cover it. It is not
 ///         interest. The owner sets the size. The owner cannot withdraw the pot
 ///         except by holding the token and claiming like anyone else.
 contract SyntectPress {
@@ -57,7 +57,7 @@ contract SyntectPress {
         if (owner_ == address(0)) revert NotOwner();
         owner = owner_;
         giftBps = 2500;
-        window = 1 days;
+        window = 15 minutes;
         minHold = 1;
     }
 

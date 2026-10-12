@@ -101,7 +101,7 @@ const copy = {
   gift: "Gift",
   giftClosed: "The press has no token yet. Gifts stay shut until setSyntect.",
   giftShort: "This wallet does not hold enough of the token.",
-  giftEarly: "This wallet already claimed in the current window.",
+  giftEarly: "This wallet already claimed. The next gift opens in 15 minutes.",
   giftDry: "The pot cannot cover a gift.",
   giftReady: "Claim one gift. It is taken from the pot. It is not yield.",
   giftUnset: "The owner has not set a gift size.",
