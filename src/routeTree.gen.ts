@@ -15,6 +15,7 @@ import { Route as DeskRouteImport } from './routes/desk'
 import { Route as DetectRouteImport } from './routes/detect'
 import { Route as DiveRouteImport } from './routes/dive'
 import { Route as HuntRouteImport } from './routes/hunt'
+import { Route as RoomRouteImport } from './routes/room'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const HuntRoute = HuntRouteImport.update({
   path: '/hunt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoomRoute = RoomRouteImport.update({
+  id: '/room',
+  path: '/room',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/detect': typeof DetectRoute
   '/dive': typeof DiveRoute
   '/hunt': typeof HuntRoute
+  '/room': typeof RoomRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/detect': typeof DetectRoute
   '/dive': typeof DiveRoute
   '/hunt': typeof HuntRoute
+  '/room': typeof RoomRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +79,22 @@ export interface FileRoutesById {
   '/detect': typeof DetectRoute
   '/dive': typeof DiveRoute
   '/hunt': typeof HuntRoute
+  '/room': typeof RoomRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/bench' | '/desk' | '/detect' | '/dive' | '/hunt'
+  fullPaths: '/' | '/bench' | '/desk' | '/detect' | '/dive' | '/hunt' | '/room'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/bench' | '/desk' | '/detect' | '/dive' | '/hunt'
-  id: '__root__' | '/' | '/bench' | '/desk' | '/detect' | '/dive' | '/hunt'
+  to: '/' | '/bench' | '/desk' | '/detect' | '/dive' | '/hunt' | '/room'
+  id:
+    | '__root__'
+    | '/'
+    | '/bench'
+    | '/desk'
+    | '/detect'
+    | '/dive'
+    | '/hunt'
+    | '/room'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,6 +104,7 @@ export interface RootRouteChildren {
   DetectRoute: typeof DetectRoute
   DiveRoute: typeof DiveRoute
   HuntRoute: typeof HuntRoute
+  RoomRoute: typeof RoomRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HuntRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/room': {
+      id: '/room'
+      path: '/room'
+      fullPath: '/room'
+      preLoaderRoute: typeof RoomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -143,6 +168,7 @@ const rootRouteChildren: RootRouteChildren = {
   DetectRoute: DetectRoute,
   DiveRoute: DiveRoute,
   HuntRoute: HuntRoute,
+  RoomRoute: RoomRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
