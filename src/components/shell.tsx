@@ -5,14 +5,17 @@ import { LAUNCH } from "@/lib/launch";
 import { useI18n, type CopyKey } from "@/lib/i18n";
 import { loadSave, rankOf } from "@/lib/ink/store";
 import { isMuted, setMuted } from "@/lib/ink/sound";
+import { shortAddress } from "@/lib/press/chain";
+import { useWallet } from "@/lib/press/wallet";
 
-const LINKS: { to: "/" | "/bench" | "/dive" | "/hunt" | "/detect" | "/desk"; key: CopyKey }[] = [
+const LINKS: { to: "/" | "/bench" | "/dive" | "/hunt" | "/detect" | "/desk" | "/room"; key: CopyKey }[] = [
   { to: "/", key: "navHome" },
   { to: "/bench", key: "navBench" },
   { to: "/dive", key: "navDive" },
   { to: "/hunt", key: "navHunt" },
   { to: "/detect", key: "navDetect" },
   { to: "/desk", key: "navDesk" },
+  { to: "/room", key: "navRoom" },
 ];
 
 type Sheet = "dark" | "light";
@@ -31,7 +34,8 @@ function applySheet(sheet: Sheet) {
 }
 
 export function Shell({ children }: { children: ReactNode }) {
-  const { t, locale, setLocale } = useI18n();
+  const { t } = useI18n();
+  const wallet = useWallet();
   const [ink, setInk] = useState(0);
   const [muted, setMute] = useState(false);
   const [sheet, setSheet] = useState<Sheet>("dark");
@@ -50,7 +54,7 @@ export function Shell({ children }: { children: ReactNode }) {
   }, []);
 
   const rank = rankOf(ink);
-  const rankName = locale === "tr" ? rank.current.tr : rank.current.en;
+  const rankName = rank.current.en;
   const nav = (className: string) => (
     <nav className={className}>
       {LINKS.map((link) => (
@@ -99,13 +103,12 @@ export function Shell({ children }: { children: ReactNode }) {
                 );
               })}
             </div>
-            <button
-              type="button"
-              className="min-h-11 rounded-full border border-line px-3 text-xs text-muted"
-              onClick={() => setLocale(locale === "en" ? "tr" : "en")}
+            <Link
+              to="/room"
+              className="flex min-h-11 shrink-0 items-center rounded-full border border-line px-3 text-xs text-paper"
             >
-              {locale === "en" ? "TR" : "EN"}
-            </button>
+              {wallet.address ? shortAddress(wallet.address) : t("connect")}
+            </Link>
             <button
               type="button"
               aria-pressed={!muted}

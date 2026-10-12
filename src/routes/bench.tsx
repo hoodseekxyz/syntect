@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Shell, notifyInk } from "@/components/shell";
 import { useI18n } from "@/lib/i18n";
+import { useWallet } from "@/lib/press/wallet";
 import { formatLeft, useCountdown } from "@/lib/ink/clock";
 import { brushBg, brushText, BRUSHES, type Brush } from "@/lib/ink/palette";
 import { plateTargets, platesFor, type Plate } from "@/lib/ink/plates";
@@ -18,6 +19,7 @@ type Mode = "daily" | "press";
 
 function BenchPage() {
   const { t } = useI18n();
+  const { address } = useWallet();
   const [mode, setMode] = useState<Mode>("daily");
   const [phase, setPhase] = useState<"ready" | "play" | "done">("ready");
   const [plates, setPlates] = useState<Plate[]>([]);
@@ -81,7 +83,8 @@ function BenchPage() {
   const left = useCountdown(phase === "play", endsAt, () => finish("time"));
 
   function begin(nextMode: Mode) {
-    const seed = nextMode === "daily" ? `bench:${dayKey()}` : `bench:${Date.now()}`;
+    const who = address ? `:${address.toLowerCase()}` : "";
+    const seed = nextMode === "daily" ? `bench:${dayKey()}${who}` : `bench:${Date.now()}`;
     const nextPlates = platesFor(seed);
     modeRef.current = nextMode;
     ended.current = false;
@@ -188,7 +191,7 @@ function BenchPage() {
               <p className="mt-3 text-sm text-muted">{t("benchBlurb")}</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <button type="button" className="rounded-full bg-phosphor px-5 py-3 text-sm text-ink" onClick={() => begin("daily")}>
-                  {t("daily")}
+                  {address ? t("yourPlate") : t("daily")}
                 </button>
                 <button type="button" className="rounded-full border border-line px-5 py-3 text-sm text-paper" onClick={() => begin("press")}>
                   {t("press")}

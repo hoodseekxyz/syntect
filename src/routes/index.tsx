@@ -30,7 +30,7 @@ const SQUARES = [
 ];
 
 function Home() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const [ink, setInk] = useState<number | null>(null);
   const [best, setBest] = useState<Record<GameId, number> | null>(null);
 
@@ -41,7 +41,7 @@ function Home() {
   }, []);
 
   const rank = rankOf(ink ?? 0);
-  const rankName = locale === "tr" ? rank.current.tr : rank.current.en;
+  const rankName = rank.current.en;
 
   return (
     <Shell>

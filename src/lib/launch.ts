@@ -1,4 +1,4 @@
-/** Inscribe the Pons contract here when the launch returns an address. */
+/** Inscribe the Pons token when setSyntect has been called, and the press once it is deployed. */
 export const LAUNCH = {
   ticker: "SYNTECT",
   pair: "MSFT",
@@ -6,8 +6,9 @@ export const LAUNCH = {
   openingBuy: "0",
   buyback: false,
   holders: false,
-  feeWallet: "signing",
+  feeWallet: "press",
   contract: "",
+  press: "",
   site: "syntect.xyz",
   handle: "@syntectXYZ",
 } as const;

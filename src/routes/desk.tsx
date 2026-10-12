@@ -2,24 +2,29 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Shell } from "@/components/shell";
+import { PressDesk } from "@/components/press-desk";
 import { useI18n } from "@/lib/i18n";
 import { LAUNCH } from "@/lib/launch";
 import { loadSave, rankOf, RANKS, type InkSave } from "@/lib/ink/store";
+import { activePress, shortAddress } from "@/lib/press/chain";
 
 export const Route = createFileRoute("/desk")({ component: DeskPage });
 
 const FLOW = ["flow1", "flow2", "flow3", "flow4", "flow5"] as const;
 
 function DeskPage() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const [save, setSave] = useState<InkSave | null>(null);
   const [ready, setReady] = useState(false);
+  const [recipient, setRecipient] = useState("");
   const [muted, setMuted] = useState("#9a8f7c");
   const [phosphor, setPhosphor] = useState("#d6ff3f");
 
   useEffect(() => {
     setSave(loadSave());
     setReady(true);
+    const press = activePress();
+    setRecipient(press ? shortAddress(press) : "");
     const style = getComputedStyle(document.documentElement);
     const m = style.getPropertyValue("--color-muted").trim();
     const p = style.getPropertyValue("--color-phosphor").trim();
@@ -28,8 +33,8 @@ function DeskPage() {
   }, []);
 
   const rank = rankOf(save?.ink ?? 0);
-  const rankName = locale === "tr" ? rank.current.tr : rank.current.en;
-  const nextName = rank.next ? (locale === "tr" ? rank.next.tr : rank.next.en) : "—";
+  const rankName = rank.current.en;
+  const nextName = rank.next ? rank.next.en : "—";
   const history =
     save?.history.map((row, i) => ({
       i: i + 1,
@@ -45,7 +50,7 @@ function DeskPage() {
     [t("opening"), LAUNCH.openingBuy],
     [t("buyback"), LAUNCH.buyback ? t("on") : t("off")],
     [t("holders"), LAUNCH.holders ? t("on") : t("off")],
-    [t("feeWallet"), t("signing")],
+    [t("feeWallet"), recipient || t("signing")],
   ];
 
   return (
@@ -58,6 +63,10 @@ function DeskPage() {
           <h1 className="mt-2 text-5xl text-paper sm:text-6xl">{t("deskTitle")}</h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-bone">{t("feeLine")}</p>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pt-8">
+        <PressDesk />
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-4 px-4 py-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -114,7 +123,7 @@ function DeskPage() {
             <ul className="mt-4 grid grid-cols-3 gap-2 text-xs">
               {RANKS.slice(1).map((item) => (
                 <li key={item.id} className="rounded-lg border border-line px-2 py-2 text-muted">
-                  <span className="block text-paper">{locale === "tr" ? item.tr : item.en}</span>
+                  <span className="block text-paper">{item.en}</span>
                   {item.ink}
                 </li>
               ))}

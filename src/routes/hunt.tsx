@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell, notifyInk } from "@/components/shell";
 import { useI18n } from "@/lib/i18n";
+import { useWallet } from "@/lib/press/wallet";
 import { formatLeft, useCountdown } from "@/lib/ink/clock";
 import { dayKey, hashStr, mulberry32, shuffle } from "@/lib/ink/rng";
 import { blip } from "@/lib/ink/sound";
@@ -52,6 +53,7 @@ function wave(rnd: () => number, n: number): Cell[] {
 
 function HuntPage() {
   const { t } = useI18n();
+  const { address } = useWallet();
   const rnd = useRef<() => number>(() => 0);
   const ended = useRef(false);
   const scoreRef = useRef(0);
@@ -80,7 +82,8 @@ function HuntPage() {
   const left = useCountdown(phase === "play", endsAt, finish);
 
   function begin(isDaily: boolean) {
-    const seed = hashStr(isDaily ? `hunt:${dayKey()}` : `hunt:${Date.now()}`);
+    const who = address ? `:${address.toLowerCase()}` : "";
+    const seed = hashStr(isDaily ? `hunt:${dayKey()}${who}` : `hunt:${Date.now()}`);
     rnd.current = mulberry32(seed);
     ended.current = false;
     scoreRef.current = 0;
@@ -145,7 +148,7 @@ function HuntPage() {
           {phase === "ready" && (
             <div className="mt-6 flex flex-wrap gap-3">
               <button type="button" className="rounded-full bg-phosphor px-5 py-3 text-sm text-ink" onClick={() => begin(true)}>
-                {t("daily")}
+                {address ? t("yourPlate") : t("daily")}
               </button>
               <button type="button" className="rounded-full border border-line px-5 py-3 text-sm" onClick={() => begin(false)}>
                 {t("press")}

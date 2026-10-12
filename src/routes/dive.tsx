@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell, notifyInk } from "@/components/shell";
 import { useI18n } from "@/lib/i18n";
+import { useWallet } from "@/lib/press/wallet";
 import { formatLeft, useCountdown } from "@/lib/ink/clock";
 import { hashStr, mulberry32 } from "@/lib/ink/rng";
 import { dayKey } from "@/lib/ink/rng";
@@ -38,6 +39,7 @@ function tone(name: string): string {
 
 function DivePage() {
   const { t } = useI18n();
+  const { address } = useWallet();
   const rnd = useRef<() => number>(() => 0);
   const busy = useRef(false);
   const ended = useRef(false);
@@ -75,7 +77,8 @@ function DivePage() {
   const left = useCountdown(phase === "play", endsAt, finish);
 
   function begin(isDaily: boolean) {
-    const seed = hashStr(isDaily ? `dive:${dayKey()}` : `dive:${Date.now()}`);
+    const who = address ? `:${address.toLowerCase()}` : "";
+    const seed = hashStr(isDaily ? `dive:${dayKey()}${who}` : `dive:${Date.now()}`);
     rnd.current = mulberry32(seed);
     ended.current = false;
     busy.current = false;
@@ -137,7 +140,7 @@ function DivePage() {
           {phase === "ready" && (
             <div className="mt-6 flex flex-wrap gap-3">
               <button type="button" className="rounded-full bg-phosphor px-5 py-3 text-sm text-ink" onClick={() => begin(true)}>
-                {t("daily")}
+                {address ? t("yourPlate") : t("daily")}
               </button>
               <button type="button" className="rounded-full border border-line px-5 py-3 text-sm" onClick={() => begin(false)}>
                 {t("press")}
