@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Shell, notifyInk } from "@/components/shell";
+import { HuntLive } from "@/components/live";
 import { useI18n } from "@/lib/i18n";
 import { useWallet } from "@/lib/press/wallet";
 import { formatLeft, useCountdown } from "@/lib/ink/clock";
@@ -143,16 +144,19 @@ function HuntPage() {
         <div className="absolute inset-0 bg-ink/82" />
         <div className="relative mx-auto max-w-3xl px-4 py-8">
           <h1 className="text-5xl text-paper">{t("navHunt")}</h1>
-          <p className="mt-3 max-w-lg text-sm text-bone">{t("howHunt")}</p>
 
           {phase === "ready" && (
-            <div className="mt-6 flex flex-wrap gap-3">
-              <button type="button" className="rounded-full bg-phosphor px-5 py-3 text-sm text-ink" onClick={() => begin(true)}>
-                {address ? t("yourPlate") : t("daily")}
-              </button>
-              <button type="button" className="rounded-full border border-line px-5 py-3 text-sm" onClick={() => begin(false)}>
-                {t("press")}
-              </button>
+            <div className="mt-6">
+              <HuntLive />
+              <p className="mt-4 text-sm text-bone">{t("huntMove")}</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button type="button" className="rounded-full bg-comment px-5 py-3 text-sm text-ink" onClick={() => begin(true)}>
+                  {address ? t("yourPlate") : t("daily")}
+                </button>
+                <button type="button" className="rounded-full border border-line px-5 py-3 text-sm" onClick={() => begin(false)}>
+                  {t("press")}
+                </button>
+              </div>
             </div>
           )}
 

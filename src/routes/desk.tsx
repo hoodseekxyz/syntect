@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { Shell } from "@/components/shell";
 import { PressDesk } from "@/components/press-desk";
+import { DeskLive } from "@/components/live";
 import { useI18n } from "@/lib/i18n";
 import { LAUNCH } from "@/lib/launch";
 import { loadSave, rankOf, RANKS, type InkSave } from "@/lib/ink/store";
@@ -61,7 +62,10 @@ function DeskPage() {
         <div className="relative mx-auto max-w-6xl px-4 py-12">
           <p className="text-xs text-phosphor">{LAUNCH.ticker}</p>
           <h1 className="mt-2 text-5xl text-paper sm:text-6xl">{t("deskTitle")}</h1>
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-bone">{t("feeLine")}</p>
+          <div className="mt-6 max-w-xl">
+            <DeskLive />
+          </div>
+          <p className="mt-4 max-w-xl text-sm text-bone">{t("deskMove")}</p>
         </div>
       </section>
 
@@ -72,16 +76,14 @@ function DeskPage() {
       <section className="mx-auto grid max-w-6xl gap-4 px-4 py-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-2xl border border-line bg-ink-2 p-4">
           <h2 className="text-2xl">{t("settings")}</h2>
-          <table className="mt-4 w-full text-left text-sm">
-            <tbody>
-              {rows.map(([k, v]) => (
-                <tr key={k} className="border-b border-line">
-                  <th className="py-3 pr-4 font-normal text-muted">{k}</th>
-                  <td className="py-3 text-paper">{v}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {rows.map(([k, v]) => (
+              <div key={k} className="rounded-2xl border border-line bg-ink p-3">
+                <p className="text-xs text-muted">{k}</p>
+                <p className="mt-2 font-display text-2xl text-paper">{v}</p>
+              </div>
+            ))}
+          </div>
           <div className="mt-5 flex h-3 overflow-hidden rounded-full bg-ink-3">
               <div className="h-full grow bg-bone" />
               <div className="h-full w-2 bg-phosphor" />

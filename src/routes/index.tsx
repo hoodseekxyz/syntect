@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
+import { DeskLive, DetectLive, DiveLive, HuntLive, InkLive, PressLive, RoomLive, RoomTile } from "@/components/live";
 import { useI18n } from "@/lib/i18n";
 import { LAUNCH } from "@/lib/launch";
-import { loadSave, rankOf, type GameId } from "@/lib/ink/store";
+import { loadSave, rankOf } from "@/lib/ink/store";
 
 export const Route = createFileRoute("/")({ component: Home });
 
@@ -32,12 +33,9 @@ const SQUARES = [
 function Home() {
   const { t } = useI18n();
   const [ink, setInk] = useState<number | null>(null);
-  const [best, setBest] = useState<Record<GameId, number> | null>(null);
 
   useEffect(() => {
-    const save = loadSave();
-    setInk(save.ink);
-    setBest(save.best);
+    setInk(loadSave().ink);
   }, []);
 
   const rank = rankOf(ink ?? 0);
@@ -74,7 +72,34 @@ function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-4 px-4 py-14 sm:grid-cols-3">
+      <section className="mx-auto max-w-6xl px-4 py-14">
+        <h2 className="text-4xl text-paper">{t("rooms")}</h2>
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <RoomTile to="/" name={t("navHome")} move={t("pressMove")} accent="#b6e000">
+            <PressLive />
+          </RoomTile>
+          <RoomTile to="/bench" name={t("navBench")} move={t("inkMove")} accent="#ff4d8d">
+            <InkLive />
+          </RoomTile>
+          <RoomTile to="/dive" name={t("navDive")} move={t("diveMove")} accent="#8ec8f5">
+            <DiveLive />
+          </RoomTile>
+          <RoomTile to="/hunt" name={t("navHunt")} move={t("huntMove")} accent="#7dba6a">
+            <HuntLive />
+          </RoomTile>
+          <RoomTile to="/detect" name={t("navDetect")} move={t("detectMove")} accent="#f0b429">
+            <DetectLive />
+          </RoomTile>
+          <RoomTile to="/desk" name={t("navDesk")} move={t("deskMove")} accent="#ff8a4c">
+            <DeskLive />
+          </RoomTile>
+          <RoomTile to="/room" name={t("navRoom")} move={t("roomMove")} accent="#c084fc">
+            <RoomLive />
+          </RoomTile>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-6xl gap-4 px-4 pb-14 sm:grid-cols-3">
         <BrushCard img="/art/brush-keyword.jpg" name={t("keyword")} line={t("keywordLine")} tone="text-keyword" />
         <BrushCard img="/art/brush-string.jpg" name={t("string")} line={t("stringLine")} tone="text-string" />
         <BrushCard img="/art/brush-comment.jpg" name={t("comment")} line={t("commentLine")} tone="text-comment" />
@@ -122,36 +147,6 @@ function Home() {
           ))}
         </div>
       </section>
-
-      <section className="mx-auto max-w-6xl px-4 pb-16">
-        <h2 className="text-4xl text-paper">{t("games")}</h2>
-        <div className="mt-6 grid gap-4 md:grid-cols-3">
-          <GameCard
-            to="/bench"
-            img="/art/desk.jpg"
-            title={t("navBench")}
-            line={t("benchBlurb")}
-            best={best?.bench}
-            bestLabel={t("best")}
-          />
-          <GameCard
-            to="/dive"
-            img="/art/scopes.jpg"
-            title={t("navDive")}
-            line={t("diveBlurb")}
-            best={best?.dive}
-            bestLabel={t("best")}
-          />
-          <GameCard
-            to="/hunt"
-            img="/art/beam.jpg"
-            title={t("navHunt")}
-            line={t("huntBlurb")}
-            best={best?.hunt}
-            bestLabel={t("best")}
-          />
-        </div>
-      </section>
     </Shell>
   );
 }
@@ -174,36 +169,5 @@ function Stat({ k, v }: { k: string; v: string }) {
       <dt className="text-xs text-muted">{k}</dt>
       <dd className="mt-2 font-display text-3xl text-paper tabular-nums">{v}</dd>
     </div>
-  );
-}
-
-function GameCard({
-  to,
-  img,
-  title,
-  line,
-  best,
-  bestLabel,
-}: {
-  to: "/bench" | "/dive" | "/hunt";
-  img: string;
-  title: string;
-  line: string;
-  best?: number;
-  bestLabel: string;
-}) {
-  return (
-    <Link to={to} className="group overflow-hidden rounded-2xl border border-line bg-ink-2">
-      <img src={img} alt="" className="h-40 w-full object-cover transition duration-300 group-hover:scale-[1.02]" />
-      <div className="p-4">
-        <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-3xl text-paper">{title}</h3>
-          <span className="text-xs text-phosphor tabular-nums">
-            {bestLabel} {best ?? 0}
-          </span>
-        </div>
-        <p className="mt-2 text-sm text-muted">{line}</p>
-      </div>
-    </Link>
   );
 }

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Shell, notifyInk } from "@/components/shell";
+import { InkLive } from "@/components/live";
 import { useI18n } from "@/lib/i18n";
 import { useWallet } from "@/lib/press/wallet";
 import { formatLeft, useCountdown } from "@/lib/ink/clock";
@@ -186,11 +187,11 @@ function BenchPage() {
           </div>
 
           {phase === "ready" && (
-            <div className="mt-8 rounded-2xl border border-line bg-ink/85 p-5">
-              <p className="max-w-lg text-sm leading-relaxed text-bone">{t("howBench")}</p>
-              <p className="mt-3 text-sm text-muted">{t("benchBlurb")}</p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <button type="button" className="rounded-full bg-phosphor px-5 py-3 text-sm text-ink" onClick={() => begin("daily")}>
+            <div className="mt-6">
+              <InkLive />
+              <p className="mt-4 text-sm text-bone">{t("inkMove")}</p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <button type="button" className="rounded-full bg-keyword px-5 py-3 text-sm text-ink" onClick={() => begin("daily")}>
                   {address ? t("yourPlate") : t("daily")}
                 </button>
                 <button type="button" className="rounded-full border border-line px-5 py-3 text-sm text-paper" onClick={() => begin("press")}>

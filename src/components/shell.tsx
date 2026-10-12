@@ -8,14 +8,14 @@ import { isMuted, setMuted } from "@/lib/ink/sound";
 import { shortAddress } from "@/lib/press/chain";
 import { useWallet } from "@/lib/press/wallet";
 
-const LINKS: { to: "/" | "/bench" | "/dive" | "/hunt" | "/detect" | "/desk" | "/room"; key: CopyKey }[] = [
-  { to: "/", key: "navHome" },
-  { to: "/bench", key: "navBench" },
-  { to: "/dive", key: "navDive" },
-  { to: "/hunt", key: "navHunt" },
-  { to: "/detect", key: "navDetect" },
-  { to: "/desk", key: "navDesk" },
-  { to: "/room", key: "navRoom" },
+const LINKS: { to: "/" | "/bench" | "/dive" | "/hunt" | "/detect" | "/desk" | "/room"; key: CopyKey; dot: string }[] = [
+  { to: "/", key: "navHome", dot: "bg-phosphor" },
+  { to: "/bench", key: "navBench", dot: "bg-keyword" },
+  { to: "/dive", key: "navDive", dot: "bg-fn" },
+  { to: "/hunt", key: "navHunt", dot: "bg-comment" },
+  { to: "/detect", key: "navDetect", dot: "bg-string" },
+  { to: "/desk", key: "navDesk", dot: "bg-num" },
+  { to: "/room", key: "navRoom", dot: "bg-paper" },
 ];
 
 type Sheet = "dark" | "light";
@@ -62,9 +62,10 @@ export function Shell({ children }: { children: ReactNode }) {
           key={link.to}
           to={link.to}
           activeOptions={{ exact: true }}
-          className="flex min-h-11 shrink-0 items-center rounded-full px-3 text-xs text-muted hover:text-paper"
-          activeProps={{ className: "flex min-h-11 shrink-0 items-center rounded-full bg-ink-3 px-3 text-xs text-phosphor" }}
+          className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3 text-xs text-muted hover:text-paper"
+          activeProps={{ className: "flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-ink-3 px-3 text-xs text-phosphor" }}
         >
+          <i className={`size-1.5 rounded-full ${link.dot}`} />
           {t(link.key)}
         </Link>
       ))}

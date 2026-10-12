@@ -147,12 +147,59 @@
   }
 }
 
+.crt {
+  background:
+    radial-gradient(120% 80% at 8% 0%, rgba(255, 77, 141, 0.2), transparent 46%),
+    radial-gradient(90% 80% at 100% 100%, rgba(214, 255, 63, 0.14), transparent 42%),
+    #120f0c;
+  color: #f3ead7;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+}
+.crt-scan::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255, 255, 255, 0.025) 3px 4px);
+}
+.live-dot {
+  animation: live-dot 1.2s ease-in-out infinite;
+}
+@keyframes live-dot {
+  50% {
+    opacity: 0.25;
+  }
+}
+.pot-fill {
+  animation: pot-fill 2.8s ease-in-out infinite;
+}
+@keyframes pot-fill {
+  0%,
+  100% {
+    width: 18%;
+  }
+  50% {
+    width: 72%;
+  }
+}
+.fee-sliver {
+  animation: fee-sliver 1.6s ease-in-out infinite;
+}
+@keyframes fee-sliver {
+  50% {
+    filter: brightness(1.4);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scan-tok,
   .beam,
   .pop-up,
   .shake,
-  .stamp-in {
+  .stamp-in,
+  .live-dot,
+  .pot-fill,
+  .fee-sliver {
     animation: none;
     opacity: 1;
   }
@@ -190,8 +237,32 @@ html[data-ink="light"] .text-fn {
 html[data-ink="light"] .text-num {
   color: #b84312;
 }
-html[data-ink="light"] :is(.bg-phosphor, .bg-keyword, .bg-string, .bg-comment).text-ink {
+html[data-ink="light"] :is(.bg-phosphor, .bg-keyword, .bg-string, .bg-comment, .bg-fn, .bg-num).text-ink {
   color: #14120e;
+}
+html[data-ink="light"] .crt :is(.text-keyword) {
+  color: #ff4d8d;
+}
+html[data-ink="light"] .crt :is(.text-string) {
+  color: #f0b429;
+}
+html[data-ink="light"] .crt :is(.text-comment) {
+  color: #b6e2a8;
+}
+html[data-ink="light"] .crt :is(.text-fn) {
+  color: #8ec8f5;
+}
+html[data-ink="light"] .crt :is(.text-num) {
+  color: #ff8a4c;
+}
+html[data-ink="light"] .crt :is(.text-phosphor) {
+  color: #d6ff3f;
+}
+html[data-ink="light"] .crt :is(.text-paper, .text-bone) {
+  color: #f3ead7;
+}
+html[data-ink="light"] .crt :is(.text-muted) {
+  color: #9a8f7c;
 }
 html[data-ink="light"] ::selection {
   background: #1a1612;

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Shell } from "@/components/shell";
+import { DiveLive, HuntLive, InkLive } from "@/components/live";
 import { useI18n } from "@/lib/i18n";
 import {
   activePress,
@@ -16,9 +17,9 @@ import { useWallet } from "@/lib/press/wallet";
 export const Route = createFileRoute("/room")({ component: RoomPage });
 
 const DOORS = [
-  { to: "/bench", key: "navBench", line: "benchBlurb" },
-  { to: "/dive", key: "navDive", line: "diveBlurb" },
-  { to: "/hunt", key: "navHunt", line: "huntBlurb" },
+  { to: "/bench", key: "navBench", line: "inkMove", live: InkLive, accent: "#ff4d8d" },
+  { to: "/dive", key: "navDive", line: "diveMove", live: DiveLive, accent: "#8ec8f5" },
+  { to: "/hunt", key: "navHunt", line: "huntMove", live: HuntLive, accent: "#7dba6a" },
 ] as const;
 
 function RoomPage() {
@@ -90,28 +91,57 @@ function RoomPage() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-4 px-4 py-8 md:grid-cols-3">
-        {DOORS.map((door) =>
-          wallet.address ? (
-            <Link key={door.to} to={door.to} className="rounded-2xl border border-line bg-ink-2 p-5">
-              <p className="text-xs text-phosphor">{t("play")}</p>
-              <h2 className="mt-2 font-display text-4xl text-paper">{t(door.key)}</h2>
-              <p className="mt-3 text-sm text-bone">{t(door.line)}</p>
+      <section className="mx-auto grid max-w-6xl gap-4 px-4 py-8 lg:grid-cols-3">
+        {DOORS.map((door) => {
+          const Live = door.live;
+          const body = (
+            <>
+              <div className="mb-3 flex items-end justify-between px-1">
+                <h2 className="font-display text-4xl" style={{ color: door.accent }}>
+                  {t(door.key)}
+                </h2>
+                <span className="text-xs text-phosphor">{wallet.address ? t("play") : t("locked")}</span>
+              </div>
+              <Live />
+              <p className="px-1 pt-3 text-sm text-bone">{t(door.line)}</p>
+            </>
+          );
+          return wallet.address ? (
+            <Link key={door.to} to={door.to} className="block rounded-3xl border border-line bg-ink-2 p-3">
+              {body}
             </Link>
           ) : (
-            <article key={door.to} className="rounded-2xl border border-dashed border-line bg-ink-2 p-5">
-              <p className="text-xs text-muted">{t("locked")}</p>
-              <h2 className="mt-2 font-display text-4xl text-muted">{t(door.key)}</h2>
-              <p className="mt-3 text-sm text-muted">{t("roomClosed")}</p>
+            <article key={door.to} className="rounded-3xl border border-line bg-ink-2 p-3">
+              {body}
             </article>
-          ),
-        )}
+          );
+        })}
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-14">
         <article className="rounded-2xl border border-line bg-ink-2 p-5">
           <p className="text-xs text-phosphor">{t("gift")}</p>
           <p className="mt-3 max-w-xl text-sm leading-relaxed text-bone">{giftLine}</p>
+          {view && (
+            <div className="mt-4 grid max-w-xl grid-cols-2 gap-2 sm:grid-cols-4">
+              <div className="rounded-2xl bg-keyword p-3 text-ink">
+                <p className="text-[10px] uppercase">{t("pot")}</p>
+                <p className="font-display text-2xl leading-none">{formatEth(view.pot)}</p>
+              </div>
+              <div className="rounded-2xl bg-phosphor p-3 text-ink">
+                <p className="text-[10px] uppercase">{t("gift")}</p>
+                <p className="font-display text-2xl leading-none">{view.giftWei > 0n ? formatEth(view.giftWei) : "—"}</p>
+              </div>
+              <div className={`rounded-2xl p-3 text-ink ${holds ? "bg-comment" : "bg-num"}`}>
+                <p className="text-[10px] uppercase">hold</p>
+                <p className="font-display text-2xl leading-none">{holds ? "yes" : "no"}</p>
+              </div>
+              <div className="rounded-2xl bg-fn p-3 text-ink">
+                <p className="text-[10px] uppercase">15m</p>
+                <p className="font-display text-2xl leading-none">{cooled ? "open" : "wait"}</p>
+              </div>
+            </div>
+          )}
           {view && (
             <p className="mt-3 text-xs text-muted">
               {t("pot")} {formatEth(view.pot)} ETH
